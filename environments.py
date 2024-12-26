@@ -1,5 +1,6 @@
 import gymnasium as gym
 from gymnasium.wrappers import RecordVideo, TimeLimit, RecordEpisodeStatistics
+from stable_baselines3.common.vec_env import SubprocVecEnv, DummyVecEnv, VecNormalize
 
 # Inizializzazione dell'environment
 def make_env(env_id="HalfCheetah-v5", max_episode_steps=1000, seed=0):
@@ -12,6 +13,20 @@ def make_env(env_id="HalfCheetah-v5", max_episode_steps=1000, seed=0):
     # Seed dell'ambiente per riproducibilità
     env.reset(seed=seed)
     return env
+
+# Vettorizzazione dell'environment
+def make_vec_envs(env_id="HalfCheetah-v5", n_envs=8, max_episode_steps=1000, seed=0, normalize=True,
+    norm_obs=True,
+    norm_reward=True):
+    env_fns = []
+    for i in range(n_envs):
+        env_fns.append(make_env(env_id, max_episode_steps, seed + 1000 * i))
+    vec_env = SubprocVecEnv(env_fns)
+
+    if normalize:
+        # Normalizza sia osservazioni che reward
+        vec_env = VecNormalize(vec_env, norm_obs=norm_obs, norm_reward=norm_reward, clip_obs=10.0)
+    return vec_env
 
 
 # Run una random policy per osservare il comportamento iniziale
@@ -43,6 +58,7 @@ if __name__ == "__main__":
     env = make_env()
     rewards_per_episode = run_random_policy(env)
     print(f"Rewards per episode: {rewards_per_episode }")
+    print(f"Media dei reward: {sum(rewards_per_episode) / len(rewards_per_episode)}")
 
 
 
