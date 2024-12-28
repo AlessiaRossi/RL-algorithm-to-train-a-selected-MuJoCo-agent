@@ -53,12 +53,5 @@ def run_random_policy(env, seed=0):
     env.close()
     return rewards_per_episode
 
-# main
-if __name__ == "__main__":
-    env = make_env()
-    rewards_per_episode = run_random_policy(env)
-    print(f"Rewards per episode: {rewards_per_episode }")
-    print(f"Media dei reward: {sum(rewards_per_episode) / len(rewards_per_episode)}")
-
 
 
