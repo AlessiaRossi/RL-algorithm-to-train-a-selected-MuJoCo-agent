@@ -6,6 +6,11 @@ from stable_baselines3.common.vec_env import SubprocVecEnv, VecNormalize
 from stable_baselines3.common.logger import configure
 from environments import make_env, make_vec_envs  # Import the functions
 
+
+'''TO DO:
+manca hyperparameter tuning, da fare con optuna
+'''
+
 def train_ppo(env_id="HalfCheetah-v5", total_timesteps=200_000, max_episode_steps=1000, n_envs=8, seed=0):
     train_env = make_vec_envs(env_id, n_envs, max_episode_steps, seed, normalize=True, norm_obs=True, norm_reward=True)
     train_env.save("ppo_vecnormalize_stats.pkl")

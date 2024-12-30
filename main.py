@@ -2,6 +2,10 @@ import os
 from training import train_ppo, train_sac
 from environments import make_env, run_random_policy
 
+'''TO DO:
+implemenatione main con config , cartelle di salvataggio metriche video e grafici
+'''
+
 def main():
     # Esecuzione di una random policy per osservare il comportamento iniziale
     env = make_env()
