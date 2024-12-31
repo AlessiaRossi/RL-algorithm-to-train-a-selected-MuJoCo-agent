@@ -31,7 +31,16 @@ def train_ppo(env_id="HalfCheetah-v5", total_timesteps=200_000, max_episode_step
     new_logger = configure(log_dir, ["stdout", "csv", "tensorboard"])
     model.set_logger(new_logger)
     model.learn(total_timesteps=total_timesteps)
-    return model, train_env
+
+    episode_rewards = []
+    obs = train_env.reset()
+    for _ in range(10000):
+        action, _states = model.predict(obs)
+        obs, reward, done, info = train_env.step(action)
+        episode_rewards.append(reward)
+        if done.any():
+            obs = train_env.reset()
+    return model, train_env, episode_rewards
 
 def train_sac(env_id="HalfCheetah-v5", total_timesteps=200_000, max_episode_steps=1000, n_envs=8, seed=0):
     train_env = make_vec_envs(env_id, n_envs, max_episode_steps, seed, normalize=True, norm_obs=True, norm_reward=True)
@@ -54,4 +63,13 @@ def train_sac(env_id="HalfCheetah-v5", total_timesteps=200_000, max_episode_step
     new_logger = configure(log_dir, ["stdout", "csv", "tensorboard"])
     model.set_logger(new_logger)
     model.learn(total_timesteps=total_timesteps)
-    return model, train_env
+
+    episode_rewards = []
+    obs = train_env.reset()
+    for _ in range(10000):
+        action, _states = model.predict(obs)
+        obs, reward, done, info = train_env.step(action)
+        episode_rewards.append(reward)
+        if done.any():
+            obs = train_env.reset()
+    return model, train_env, episode_rewards
