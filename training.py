@@ -13,7 +13,7 @@ manca hyperparameter tuning, da fare con optuna
 
 def train_ppo(env_id="HalfCheetah-v5", total_timesteps=200_000, max_episode_steps=1000, n_envs=8, seed=0):
     train_env = make_vec_envs(env_id, n_envs, max_episode_steps, seed, normalize=True, norm_obs=True, norm_reward=True)
-    train_env.save("ppo_vecnormalize_stats.pkl")
+    train_env.save("normalization/ppo_vecnormalize_stats.pkl")
     model = PPO(
         policy="MlpPolicy",
         env=train_env,
@@ -44,7 +44,7 @@ def train_ppo(env_id="HalfCheetah-v5", total_timesteps=200_000, max_episode_step
 
 def train_sac(env_id="HalfCheetah-v5", total_timesteps=200_000, max_episode_steps=1000, n_envs=8, seed=0):
     train_env = make_vec_envs(env_id, n_envs, max_episode_steps, seed, normalize=True, norm_obs=True, norm_reward=True)
-    train_env.save("sac_vecnormalize_stats.pkl")
+    train_env.save("normalization/sac_vecnormalize_stats.pkl")
     model = SAC(
         policy="MlpPolicy",
         env=train_env,
