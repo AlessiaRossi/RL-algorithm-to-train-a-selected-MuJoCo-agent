@@ -1,0 +1,4 @@
+media_reward: -287.40
+dev_std_reward: 116.46
+varianza_reward: 13563.67
+somma_reward: -1437.02

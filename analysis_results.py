@@ -1,5 +1,5 @@
-
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 
 # TO DO : implementare la funzione evaluate_model e plot_comparison, vedere di gestiore info
@@ -40,16 +40,24 @@ def evaluate_model(model, env, n_eval_episodes=10, success_threshold=200):
     }
     return metriche
 
-def plot(ppo_metrics, sac_metrics):
+def save_metrics(metrics, filename):
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    with open(filename, 'w') as f:
+        for key, value in metrics.items():
+            f.write(f"{key}: {value:.2f}\n")
+
+'''def plot(ppo_metrics, sac_metrics, random_metrics, filename):
     # Confronto delle metriche tra PPO e SAC e visualizzazione tramite grafici
 
-    labels = ["PPO", "SAC"]
-    rewards = [ppo_metrics["media_reward"], sac_metrics["media_reward"]]
+    labels = ["Random","PPO", "SAC"]
+    rewards = [ppo_metrics.get("media_reward", 0), sac_metrics.get("media_reward", 0), random_metrics.get("media_reward", 0)]
 
     # Grafico Ricompensa media
     plt.figure(figsize=(8, 6))
-    plt.bar(labels, rewards, color=['blue', 'orange'], alpha=0.7)
+    plt.bar(labels, rewards, color=['blue', 'orange','green'], alpha=0.7)
     plt.ylabel("Ricompensa Media")
-    plt.title("Confronto Ricompensa Media")
-    plt.show()
+    plt.title("Confronto Ricompense Medie")
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    plt.savefig(filename)
+    plt.show()'''
 
