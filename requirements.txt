@@ -2,3 +2,4 @@ gymnasium[mujoco]
 stable-baselines3
 matplotlib
 numpy
+optuna
