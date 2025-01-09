@@ -1,7 +1,7 @@
 import os
-from debugpy import configure
 import optuna
 from stable_baselines3 import PPO
+from stable_baselines3.common.logger import configure
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.callbacks import EvalCallback
 from environments import create_train_env, create_eval_env

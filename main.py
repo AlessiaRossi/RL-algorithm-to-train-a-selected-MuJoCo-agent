@@ -1,11 +1,18 @@
+import os
 import numpy as np
+import warnings
+
+warnings.filterwarnings("ignore", category=UserWarning, module="gymnasium.wrappers.record_video")
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
+
 from environments import make_env, run_random_policy
-from analysis_results import evaluate_model, plot, save_metrics
+from analysis_results import evaluate_model, save_metrics
 from functions.ppo import ppo_optuna_tuning, train_ppo
 from functions.sac import sac_optuna_tuning, train_sac
 from functions.utils import ensure_dir, load_config
 
 def main():
+    print("\nCaricamento del file di configurazione...")
     # Caricamento della configurazione
     config = load_config()
 
@@ -24,11 +31,14 @@ def main():
     N_TRIALS_SAC = config["n_trials_sac"]
 
     # Creazione delle directory per risultati
+    print("Creazione delle directory per i risultati...")
     ensure_dir("results/normalization")
     ensure_dir("results/metrics")
     ensure_dir("results/videos")
     ensure_dir("results/plots")
     ensure_dir("results/logs")
+    
+    print("\n### Inizializzazione dell'ambiente ###")
     
     # Esecuzione di una random policy
     print("\nEseguendo la Random Policy...")
