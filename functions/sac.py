@@ -68,10 +68,11 @@ def train_sac(env_id, total_timesteps=200_000, max_episode_steps=1000, eval_freq
     Allena un modello SAC con hyperparameter tuning opzionale.
     """
     # Creazione degli ambienti
+    sac_stats = "results/normalization/sac_vecnormalize_stats.pkl"
     train_env = create_train_env(env_id, n_envs, max_episode_steps, seed, normalize=True)
-    train_env.save("normalization/sac_vecnormalize_stats.pkl")
+    train_env.save(sac_stats)
 
-    eval_env = create_eval_env(env_id, max_episode_steps, seed, norm_stats_path="normalization/sac_vecnormalize_stats.pkl")
+    eval_env = create_eval_env(env_id, max_episode_steps, seed, norm_stats_path=sac_stats)
 
     default_kwargs = dict(
         policy="MlpPolicy",
@@ -103,7 +104,7 @@ def train_sac(env_id, total_timesteps=200_000, max_episode_steps=1000, eval_freq
     model = SAC(**default_kwargs)
 
     # Configurazione del logger
-    log_dir = "logs/sac/"
+    log_dir = "results/logs/sac/"
     os.makedirs(log_dir, exist_ok=True)
     new_logger = configure(log_dir, ["stdout", "csv", "tensorboard"])
     model.set_logger(new_logger)

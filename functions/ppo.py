@@ -61,10 +61,11 @@ def train_ppo(env_id, total_timesteps=200_000, max_episode_steps=1000, eval_freq
     Allena un modello PPO con hyperparameter tuning opzionale.
     """
     # Creazione degli ambienti
+    ppo_stats = "results/normalization/ppo_vecnormalize_stats.pkl"
     train_env = create_train_env(env_id, n_envs, max_episode_steps, seed, normalize=True)
-    train_env.save("normalization/ppo_vecnormalize_stats.pkl")
+    train_env.save(ppo_stats)
 
-    eval_env = create_eval_env(env_id, max_episode_steps, seed, norm_stats_path="normalization/ppo_vecnormalize_stats.pkl")
+    eval_env = create_eval_env(env_id, max_episode_steps, seed, norm_stats_path=ppo_stats)
 
     default_kwargs = dict(
         policy="MlpPolicy",
@@ -87,7 +88,7 @@ def train_ppo(env_id, total_timesteps=200_000, max_episode_steps=1000, eval_freq
     model = PPO(**default_kwargs)
 
     # Configurazione del logger
-    log_dir = "logs/ppo/"
+    log_dir = "results/logs/ppo/"
     os.makedirs(log_dir, exist_ok=True)
     new_logger = configure(log_dir, ["stdout", "csv", "tensorboard"])
     model.set_logger(new_logger)
