@@ -26,7 +26,7 @@ def ppo_optuna_tuning(env_id, max_episode_steps=1000, n_trials=10, training_step
         # Modello PPO
         model = PPO(
             policy="MlpPolicy",
-            env=train_env,
+            env=train_env, device="cuda",
             verbose=0,
             seed=seed,
             learning_rate=lr,
@@ -69,7 +69,7 @@ def train_ppo(env_id, total_timesteps=200_000, max_episode_steps=1000, eval_freq
 
     default_kwargs = dict(
         policy="MlpPolicy",
-        env=train_env,
+        env=train_env, device="cuda",
         verbose=0,
         seed=seed,
         learning_rate=3e-4, # provare range tra 1e-5 e 1e-3
