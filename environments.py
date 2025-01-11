@@ -62,9 +62,9 @@ def create_train_env(env_id, n_envs, max_episode_steps, seed, normalize=True, no
     )
     
     if norm_stats_path:
-        eval_env = VecNormalize.load(norm_stats_path, eval_env)
-        eval_env.training = False
-        eval_env.norm_reward = False
+        envs = VecNormalize.load(norm_stats_path, envs)
+        envs.training = False
+        envs.norm_reward = False
 
     return envs
 
