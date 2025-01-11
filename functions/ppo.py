@@ -6,7 +6,6 @@ from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.callbacks import EvalCallback
 from environments import create_train_env, create_eval_env, make_env
 from functions.progressCallback import ProgressCallback
-from functions.utils import progressCallback
 
 def ppo_optuna_tuning(env_id, max_episode_steps=1000, n_trials=10, training_steps=50000, eval_episodes=5, n_envs=8, seed=0):
     """
