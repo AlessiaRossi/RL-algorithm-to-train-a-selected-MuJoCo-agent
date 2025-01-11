@@ -21,7 +21,7 @@ def ppo_optuna_tuning(env_id, max_episode_steps=1000, n_trials=10, training_step
 
         # Creazione degli ambienti
         train_env = create_train_env(env_id, n_envs, max_episode_steps, seed, normalize=True)
-        eval_env = make_env(env_id, max_episode_steps, seed)
+        eval_env = create_eval_env(env_id, max_episode_steps, seed)
 
         # Modello PPO
         model = PPO(
