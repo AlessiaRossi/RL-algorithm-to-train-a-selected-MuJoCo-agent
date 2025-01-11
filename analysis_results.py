@@ -37,7 +37,6 @@ def evaluate_model(model, env, n_eval_episodes=10, success_threshold=200):
         "dev_std_reward": np.std(episodio_rewards),
         "varianza_reward": np.var(episodio_rewards),
         "somma_reward": np.sum(episodio_rewards),
-        "media_reward": np.mean(episodio_rewards),
     }
     return metriche
 
