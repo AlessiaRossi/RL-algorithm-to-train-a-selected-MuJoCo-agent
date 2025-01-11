@@ -80,11 +80,3 @@ def load_config(config_path="config.yaml"):
     # Convalida della configurazione
     validate_config(config)
     return config
-
-# Funzione per stampare la % di training completato ogni check_freq step.
-def progressCallback(n_calls, total_timesteps, check_freq=10000, verbose=1):
-    if n_calls % check_freq == 0:
-        pct = 100.0 * n_calls / total_timesteps
-        if verbose > 0:
-            print(f"Training progress: {pct:.2f}%")
-    return True

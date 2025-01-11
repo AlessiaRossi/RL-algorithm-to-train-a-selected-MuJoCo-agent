@@ -5,6 +5,7 @@ from stable_baselines3.common.logger import configure
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.callbacks import EvalCallback
 from environments import create_train_env, create_eval_env, make_env
+from functions.progressCallback import ProgressCallback
 from functions.utils import progressCallback
 
 def ppo_optuna_tuning(env_id, max_episode_steps=1000, n_trials=10, training_steps=50000, eval_episodes=5, n_envs=8, seed=0):
@@ -94,7 +95,7 @@ def train_ppo(env_id, total_timesteps=200_000, max_episode_steps=1000, eval_freq
     model.set_logger(new_logger)
 
     # Callback per il progresso e la valutazione
-    progress_callback = progressCallback(total_timesteps=total_timesteps, check_freq=20000)
+    progress_callback = ProgressCallback(total_timesteps=total_timesteps, check_freq=20000)
     eval_callback = EvalCallback(
         eval_env,
         best_model_save_path=log_dir,
