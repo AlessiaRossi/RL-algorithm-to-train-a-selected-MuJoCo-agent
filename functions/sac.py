@@ -13,11 +13,11 @@ def sac_optuna_tuning(env_id, max_episode_steps=1000, n_trials=10, training_step
     """
     def objective(trial: optuna.Trial):
         # Parametri da ottimizzare
-        lr = trial.suggest_float("learning_rate", 1e-5, 1e-3, log=True)
-        buff_size = trial.suggest_int("buffer_size", 100000, 2000000, step=100000)
-        bs = trial.suggest_int("batch_size", 64, 1024, step=64)
-        gam = trial.suggest_float("gamma", 0.90, 0.9999, log=True)
-        tau_ = trial.suggest_float("tau", 0.005, 0.2, log=True)
+        lr = trial.suggest_float("learning_rate", 1e-5, 3e-4, log=True)
+        buff_size = trial.suggest_int("buffer_size", 500000, 2000000, step=100000)
+        bs = trial.suggest_int("batch_size", 128, 512, step=64)
+        gam = trial.suggest_float("gamma", 0.95, 0.9999, log=True)
+        tau_ = trial.suggest_float("tau", 0.01, 0.1, log=True)
 
         auto_entropy = trial.suggest_categorical("auto_entropy", [True, False])
         if auto_entropy:
@@ -79,8 +79,8 @@ def train_sac(env_id, total_timesteps=200_000, max_episode_steps=1000, eval_freq
         env=train_env,
         verbose=0,
         seed=seed,
-        learning_rate=3e-4,
-        buffer_size=1_000_000,
+        learning_rate=3e-4,  # provare range tra 1e-5 e 1e-3
+        buffer_size=2_000_000,
         batch_size=256,
         gamma=0.99,
         tau=0.02,

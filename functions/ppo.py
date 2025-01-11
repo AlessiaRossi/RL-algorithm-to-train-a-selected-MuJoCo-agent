@@ -14,10 +14,10 @@ def ppo_optuna_tuning(env_id, max_episode_steps=1000, n_trials=10, training_step
     def objective(trial: optuna.Trial):
         # Parametri da ottimizzare
         lr = trial.suggest_float("learning_rate", 1e-5, 1e-3, log=True)
-        steps = trial.suggest_int("n_steps", 2048, 8192, step=1024)
-        gam = trial.suggest_float("gamma", 0.90, 0.9999, log=True)
-        lam = trial.suggest_float("gae_lambda", 0.80, 1.00)
-        clipr = trial.suggest_float("clip_range", 0.1, 0.4)
+        steps = trial.suggest_int("n_steps", 2048, 4096, step=1024)
+        gam = trial.suggest_float("gamma", 0.95, 0.9999, log=True)
+        lam = trial.suggest_float("gae_lambda", 0.85, 1.00)
+        clipr = trial.suggest_float("clip_range", 0.15, 0.3)
 
         # Creazione degli ambienti
         train_env = create_train_env(env_id, n_envs, max_episode_steps, seed, normalize=True)
@@ -34,7 +34,7 @@ def ppo_optuna_tuning(env_id, max_episode_steps=1000, n_trials=10, training_step
             gamma=gam,
             gae_lambda=lam,
             clip_range=clipr,
-            policy_kwargs={"net_arch": [256, 256]},
+            policy_kwargs={"net_arch": [512, 256, 128]},
         )
 
         # Training del modello
@@ -72,12 +72,12 @@ def train_ppo(env_id, total_timesteps=200_000, max_episode_steps=1000, eval_freq
         env=train_env,
         verbose=0,
         seed=seed,
-        learning_rate=3e-4,
+        learning_rate=3e-4, # provare range tra 1e-5 e 1e-3
         n_steps=2048,
         gamma=0.99,
         gae_lambda=0.95,
         clip_range=0.2,
-        policy_kwargs={"net_arch": [256, 256]}
+        policy_kwargs={"net_arch": [512, 256, 128]}
     )
 
     # Gestione dei parametri di hyperparameter tuning
