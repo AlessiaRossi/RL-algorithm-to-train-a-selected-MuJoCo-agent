@@ -32,7 +32,7 @@ def sac_optuna_tuning(env_id, max_episode_steps=1000, n_trials=10, training_step
         # Modello SAC
         model = SAC(
             policy="MlpPolicy",
-            env=train_env,
+            env=train_env, device="cuda",
             verbose=0,
             seed=seed,
             learning_rate=lr,
@@ -58,7 +58,7 @@ def sac_optuna_tuning(env_id, max_episode_steps=1000, n_trials=10, training_step
 
     # Configurazione di Optuna
     study = optuna.create_study(direction="minimize")
-    study.optimize(objective, n_trials=n_trials, show_progress_bar=True)
+    study.optimize(objective, n_trials=n_trials, n_jobs=4, show_progress_bar=True)
     best_params = study.best_params
     print("\n[SAC Optuna] Best hyperparameters:", best_params)
     return best_params
@@ -76,7 +76,7 @@ def train_sac(env_id, total_timesteps=200_000, max_episode_steps=1000, eval_freq
 
     default_kwargs = dict(
         policy="MlpPolicy",
-        env=train_env,
+        env=train_env, device="cuda",
         verbose=0,
         seed=seed,
         learning_rate=3e-4,  # provare range tra 1e-5 e 1e-3
