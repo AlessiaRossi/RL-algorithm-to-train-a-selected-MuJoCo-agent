@@ -32,6 +32,16 @@ def validate_config(config, required_keys):
     if missing_keys:
         raise ValueError(f"Configurazione non valida. Mancano i seguenti campi: {missing_keys}")
 
+    # Verifica dei valori critici
+    if config["ppo_training_steps"] > config["ppo_timesteps"]:
+        raise ValueError("Training steps di PPO non possono superare i timesteps totali!")
+    if config["sac_training_steps"] > config["sac_timesteps"]:
+        raise ValueError("Training steps di SAC non possono superare i timesteps totali!")
+    if config["n_envs"] <= 0:
+        raise ValueError("Il numero di ambienti (n_envs) deve essere maggiore di 0!")
+    if config["n_episodes"] <= 0:
+        raise ValueError("Il numero di episodi (n_episodes) deve essere maggiore di 0!")
+
 # Funzione per caricare la configurazione
 def load_config(config_path="config.yaml"):
     if not os.path.exists(config_path):
