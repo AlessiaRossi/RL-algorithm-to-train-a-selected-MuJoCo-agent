@@ -20,18 +20,22 @@ def main():
     config = load_config()
 
     # Parametri principali dal file di configurazione
-    ENV_ID = config["env_id"]
-    MAX_EPISODE_STEPS = config["max_episode_steps"]
-    SEED = config["seed"]
-    EVAL_FREQ = config["eval_freq"]
-    PPO_TIMESTEPS = config["ppo_timesteps"]
-    SAC_TIMESTEPS = config["sac_timesteps"]
-    PPO_TRAINING_STEPS = config["ppo_training_steps"]
-    SAC_TRAINING_STEPS = config["sac_training_steps"]
-    N_ENVS = config["n_envs"]
-    N_EPISODES = config["n_episodes"]
-    N_TRIALS_PPO = config["n_trials_ppo"]
-    N_TRIALS_SAC = config["n_trials_sac"]
+    ENV_ID = config["environment"]["env_id"]
+    MAX_EPISODE_STEPS = config["environment"]["max_episode_steps"]
+    SEED = config["environment"]["seed"]
+    EVAL_FREQ = config["evaluation"]["eval_freq"]
+    N_EPISODES = config["evaluation"]["n_episodes"]
+    N_ENVS = config["environment"]["n_envs"]
+
+    # Parametri specifici di PPO
+    PPO_TIMESTEPS = config["ppo"]["timesteps"]
+    PPO_TRAINING_STEPS = config["ppo"]["training_steps"]
+    N_TRIALS_PPO = config["ppo"]["n_trials"]
+
+    # Parametri specifici di SAC
+    SAC_TIMESTEPS = config["sac"]["timesteps"]
+    SAC_TRAINING_STEPS = config["sac"]["training_steps"]
+    N_TRIALS_SAC = config["sac"]["n_trials"]
 
     # Creazione delle directory per risultati
     print("Creazione delle directory per i risultati...")
