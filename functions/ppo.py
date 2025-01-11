@@ -65,7 +65,7 @@ def train_ppo(env_id, total_timesteps=200_000, max_episode_steps=1000, eval_freq
     train_env = create_train_env(env_id, n_envs, max_episode_steps, seed, normalize=True, norm_obs=True, norm_reward=True)
     train_env.save(ppo_stats)
 
-    eval_env = create_train_env(env_id, max_episode_steps, seed, normalize=True, norm_obs=True, norm_reward=False, norm_stats_path=ppo_stats)
+    eval_env = create_train_env(env_id, 1, max_episode_steps, seed+999, normalize=True, norm_obs=True, norm_reward=False, norm_stats_path=ppo_stats)
 
     default_kwargs = dict(
         policy="MlpPolicy",
