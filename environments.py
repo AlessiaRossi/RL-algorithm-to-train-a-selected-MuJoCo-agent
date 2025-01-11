@@ -50,22 +50,25 @@ def run_random_policy(env, seed=0):
     return rewards_per_episode
 
 # Creazione di un ambiente di training normalizzato
-def create_train_env(env_id, n_envs, max_episode_steps, seed, normalize=True):
-    return make_vec_envs(
+def create_train_env(env_id, n_envs, max_episode_steps, seed, normalize=True, norm_obs=True, norm_reward=True, norm_stats_path=None):
+    envs = make_vec_envs(
         env_id,
         n_envs,
         max_episode_steps,
         seed,
         normalize=normalize,
-        norm_obs=True,
-        norm_reward=True
+        norm_obs=norm_obs,
+        norm_reward=norm_reward
     )
-
-# Creazione di un ambiente di valutazione opzionalmente normalizzato
-def create_eval_env(env_id, max_episode_steps, seed, norm_stats_path=None):
-    eval_env = make_env(env_id, max_episode_steps, seed+999)()
+    
     if norm_stats_path:
         eval_env = VecNormalize.load(norm_stats_path, eval_env)
         eval_env.training = False
         eval_env.norm_reward = False
+
+    return envs
+
+# Creazione di un ambiente di valutazione opzionalmente normalizzato
+def create_eval_env(env_id, max_episode_steps, seed):
+    eval_env = make_env(env_id, max_episode_steps, seed+999)()
     return eval_env

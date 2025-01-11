@@ -4,7 +4,7 @@ from stable_baselines3 import PPO
 from stable_baselines3.common.logger import configure
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.callbacks import EvalCallback
-from environments import create_train_env, create_eval_env
+from environments import create_train_env, create_eval_env, make_env
 from functions.utils import progressCallback
 
 def ppo_optuna_tuning(env_id, max_episode_steps=1000, n_trials=10, training_steps=50000, eval_episodes=5, n_envs=8, seed=0):
@@ -21,7 +21,7 @@ def ppo_optuna_tuning(env_id, max_episode_steps=1000, n_trials=10, training_step
 
         # Creazione degli ambienti
         train_env = create_train_env(env_id, n_envs, max_episode_steps, seed, normalize=True)
-        eval_env = create_eval_env(env_id, max_episode_steps, seed)
+        eval_env = make_env(env_id, max_episode_steps, seed)
 
         # Modello PPO
         model = PPO(
@@ -51,7 +51,7 @@ def ppo_optuna_tuning(env_id, max_episode_steps=1000, n_trials=10, training_step
 
     # Configurazione di Optuna
     study = optuna.create_study(direction="minimize")
-    study.optimize(objective, n_trials=n_trials, show_progress_bar=True)
+    study.optimize(objective, n_trials=n_trials, n_jobs=4, show_progress_bar=True)
     best_params = study.best_params
     print("\n[PPO Optuna] Best hyperparameters:", best_params)
     return best_params
@@ -62,10 +62,10 @@ def train_ppo(env_id, total_timesteps=200_000, max_episode_steps=1000, eval_freq
     """
     # Creazione degli ambienti
     ppo_stats = "results/normalization/ppo_vecnormalize_stats.pkl"
-    train_env = create_train_env(env_id, n_envs, max_episode_steps, seed, normalize=True)
+    train_env = create_train_env(env_id, n_envs, max_episode_steps, seed, normalize=True, norm_obs=True, norm_reward=True)
     train_env.save(ppo_stats)
 
-    eval_env = create_eval_env(env_id, max_episode_steps, seed, norm_stats_path=ppo_stats)
+    eval_env = create_train_env(env_id, max_episode_steps, seed, normalize=True, norm_obs=True, norm_reward=False, norm_stats_path=ppo_stats)
 
     default_kwargs = dict(
         policy="MlpPolicy",
