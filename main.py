@@ -75,7 +75,7 @@ def main():
     )
 
     # Tuning SAC con Optuna
-    print("[Optuna] Tuning SAC hyperparameters...")
+    print("\n[Optuna] Tuning SAC hyperparameters...")
     best_sac_params = sac_optuna_tuning(
         env_id=ENV_ID,
         max_episode_steps=MAX_EPISODE_STEPS,
@@ -123,6 +123,7 @@ def main():
     # print("Grafico salvato in results/plots/rewards_comparison.png")
     
     # Registrazione dei video degli episodi
+    print("\nRegistrazione dei video degli episodi...")
     video_time = f"{int(time.time())}"
     video_ppo = f"results/videos/ppo/{video_time}"
     video_sac = f"results/videos/sac/{video_time}"
