@@ -124,4 +124,8 @@ def train_sac(env_id, total_timesteps=200_000, max_episode_steps=1000, eval_freq
     # Avvio del training
     model.learn(total_timesteps=total_timesteps, callback=[progress_callback, eval_callback])
 
+    # Chiusura degli ambienti
+    train_env.close()
+    eval_env.close()
+
     return model, train_env, eval_env

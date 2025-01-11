@@ -1,6 +1,9 @@
 import os
+import time
 import numpy as np
 import warnings
+
+from functions.record import record_agent_video
 
 warnings.filterwarnings("ignore", category=UserWarning, module="gymnasium.wrappers.record_video")
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
@@ -91,7 +94,7 @@ def main():
         seed=SEED,
         hyperparams=best_ppo_params,
     )
-    ppo_metrics = evaluate_model(ppo_model, ppo_train_env, N_EPISODES)
+    ppo_metrics = evaluate_model(ppo_model, ppo_eval_env, N_EPISODES)
     save_metrics(ppo_metrics, "results/metrics/ppo_metrics.txt")
     print(f"PPO Media dei reward: {ppo_metrics['media_reward']}")
 
@@ -107,14 +110,39 @@ def main():
         seed=SEED,
         hyperparams=best_sac_params,
     )
-    sac_metrics = evaluate_model(sac_model, sac_train_env, N_EPISODES)
+    sac_metrics = evaluate_model(sac_model, sac_eval_env, N_EPISODES)
     save_metrics(sac_metrics, "results/metrics/sac_metrics.txt")
     print(f"SAC Media dei reward: {sac_metrics['media_reward']}")
 
     # print("\nGenerazione del grafico di confronto...")
     # plot(random_metrics, ppo_metrics, sac_metrics, "results/plots/rewards_comparison.png")
     # print("Grafico salvato in results/plots/rewards_comparison.png")
+    
+    # Registrazione dei video degli episodi
+    video_time = f"{int(time.time())}"
+    video_ppo = f"results/videos/ppo/{video_time}"
+    video_sac = f"results/videos/sac/{video_time}"
+    
+    OFFSET_SEED = 9999 # Seed diverso per i video, cosi da registrati situazioni diverse da quelle viste durante il training
+    record_agent_video(
+        model=ppo_model,
+        env_id=ENV_ID,
+        max_steps=MAX_EPISODE_STEPS,
+        seed=SEED + OFFSET_SEED, 
+        video_dir=video_ppo,
+        video_prefix="ppo_agent",
+        episodes=N_EPISODES
+    )
 
+    record_agent_video(
+        model=sac_model,
+        env_id=ENV_ID,
+        max_steps=MAX_EPISODE_STEPS,
+        seed=SEED + OFFSET_SEED,
+        video_dir=video_sac,
+        video_prefix="sac_agent",
+        episodes=N_EPISODES
+    )
 
 if __name__ == "__main__":
     main()
