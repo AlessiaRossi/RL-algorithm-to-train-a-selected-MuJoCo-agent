@@ -1,0 +1,23 @@
+# Parametri relativi all'ambiente di simulazione
+environment:
+  env_id: "HalfCheetah-v5"      # ID dell'ambiente MuJoCo
+  max_episode_steps: 1000       # Numero massimo di step per episodio
+  n_envs: 4                     # Numero di ambienti paralleli per il training
+  seed: 42                      # Seed per la riproducibilità dei risultati
+
+# Parametri per la valutazione del modello
+evaluation:
+  eval_freq: 50000              # Frequenza con cui eseguire la valutazione (ogni n passi di training)
+  n_episodes: 5                 # Numero di episodi utilizzati per valutare il modello
+
+# Parametri specifici per l'algoritmo PPO
+ppo:
+  timesteps: 2000000            # Numero totale di timesteps per il training
+  training_steps: 50000         # Numero di timesteps per ogni sessione di training
+  n_trials: 20                  # Numero di tentativi per il tuning degli iperparametri con Optuna
+
+# Parametri specifici per l'algoritmo SAC
+sac:
+  timesteps: 2000000            # Numero totale di timesteps per il training
+  training_steps: 50000         # Numero di timesteps per ogni sessione di training
+  n_trials: 20                  # Numero di tentativi per il tuning degli iperparametri con Optuna
