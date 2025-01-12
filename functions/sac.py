@@ -106,7 +106,7 @@ def train_sac(env_id, total_timesteps=200_000, max_episode_steps=1000, eval_freq
     # Configurazione del logger
     log_dir = "results/logs/sac/"
     os.makedirs(log_dir, exist_ok=True)
-    new_logger = configure(log_dir, ["stdout", "csv", "tensorboard"])
+    new_logger = configure(log_dir, ["csv", "tensorboard"])
     model.set_logger(new_logger)
 
     # Callback per il progresso e la valutazione
@@ -118,14 +118,10 @@ def train_sac(env_id, total_timesteps=200_000, max_episode_steps=1000, eval_freq
         eval_freq=eval_freq,
         n_eval_episodes=eval_episodes,
         deterministic=True,
-        verbose=1
+        verbose=0
     )
 
     # Avvio del training
     model.learn(total_timesteps=total_timesteps, callback=[progress_callback, eval_callback])
-
-    # Chiusura degli ambienti
-    train_env.close()
-    eval_env.close()
 
     return model, train_env, eval_env

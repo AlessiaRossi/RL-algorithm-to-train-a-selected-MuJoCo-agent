@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+from stable_baselines3.common.evaluation import evaluate_policy
 
 # TO DO : implementare la funzione evaluate_model e plot_comparison, vedere di gestiore info
 
@@ -16,7 +17,6 @@ def evaluate_model(model, env, n_eval_episodes=10, success_threshold=200):
         done = False
         total_reward = 0
 
-
         while not done:
             action, _ = model.predict(obs, deterministic=True)
             step_result = env.step(action)
@@ -31,7 +31,6 @@ def evaluate_model(model, env, n_eval_episodes=10, success_threshold=200):
 
         episodio_rewards.append(total_reward)
 
-
     metriche = {
         "media_reward": np.mean(episodio_rewards),
         "dev_std_reward": np.std(episodio_rewards),
@@ -39,6 +38,23 @@ def evaluate_model(model, env, n_eval_episodes=10, success_threshold=200):
         "somma_reward": np.sum(episodio_rewards),
     }
     return metriche
+
+def evaluate_model_test(model, env, episodes=10, success_threshold=None):
+    mean_reward, std_reward = evaluate_policy(
+        model, env, n_eval_episodes=episodes, deterministic=True
+    )
+
+    # Costruisci le metriche di valutazione
+    metrics = {
+        "media_reward": mean_reward,
+        "dev_std_reward": std_reward,
+    }
+
+    # Verifica se il reward medio supera una soglia (se specificata)
+    if success_threshold is not None:
+        metrics["success"] = mean_reward >= success_threshold
+
+    return metrics
 
 def save_metrics(metrics, filename):
     os.makedirs(os.path.dirname(filename), exist_ok=True)

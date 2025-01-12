@@ -3,7 +3,7 @@ import gym
 from gym.wrappers import RecordVideo, TimeLimit, RecordEpisodeStatistics
 
 # Registra il comportamento di un modello RL e salva i video degli episodi
-def record_agent_video(model, env_id, max_steps=1000, seed=9999, video_dir="results/videos/", video_prefix="agent", n_episodes=2):
+def record_agent_video(model, env_id, max_steps=1000, seed=9999, video_dir="results/videos/", video_prefix="agent", episodes=2):
     # Creazione della directory per i video
     os.makedirs(video_dir, exist_ok=True)
 
@@ -20,7 +20,7 @@ def record_agent_video(model, env_id, max_steps=1000, seed=9999, video_dir="resu
     env.reset(seed=seed)
 
     # Esecuzione del modello per un numero di episodi
-    for episode in range(n_episodes):
+    for episode in range(episodes):
         obs, info = env.reset(seed=seed + episode)
         done = False
         episode_reward = 0
@@ -29,7 +29,7 @@ def record_agent_video(model, env_id, max_steps=1000, seed=9999, video_dir="resu
             obs, reward, terminated, truncated, info = env.step(action)
             done = terminated or truncated
             episode_reward += reward
-        print(f"Episodio {episode + 1}/{n_episodes} completato. Reward totale: {episode_reward}")
+        print(f"Episodio {episode + 1}/{episodes} completato. Reward totale: {episode_reward}")
 
     # Chiusura dell'ambiente
     env.close()

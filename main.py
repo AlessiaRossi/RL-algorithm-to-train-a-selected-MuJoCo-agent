@@ -6,10 +6,11 @@ import warnings
 from functions.record import record_agent_video
 
 warnings.filterwarnings("ignore", category=UserWarning, module="gymnasium.wrappers.record_video")
+warnings.filterwarnings("ignore", category=UserWarning, module="stable_baselines3.common.on_policy_algorithm")
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 
 from environments import make_env, run_random_policy
-from analysis_results import evaluate_model, save_metrics
+from analysis_results import evaluate_model, evaluate_model_test, save_metrics
 from functions.ppo import ppo_optuna_tuning, train_ppo
 from functions.sac import sac_optuna_tuning, train_sac
 from functions.utils import ensure_dir, load_config
@@ -148,6 +149,12 @@ def main():
         video_prefix="sac_agent",
         episodes=N_EPISODES
     )
+
+    # Chiudiamo env
+    ppo_train_env.close()
+    ppo_eval_env.close()
+    sac_train_env.close()
+    sac_eval_env.close()
 
 if __name__ == "__main__":
     main()
