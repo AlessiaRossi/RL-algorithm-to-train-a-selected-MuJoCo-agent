@@ -33,4 +33,4 @@ def record_agent_video(model, env_id, max_steps=1000, seed=9999, video_dir="resu
 
     # Chiusura dell'ambiente
     env.close()
-    print(f"Video degli episodi '{video_prefix.replace("_agent", "")}' salvati in: {video_dir}")
+    print(f"Video degli episodi '{video_prefix.replace('_agent', '')}' salvati in: {video_dir}")
