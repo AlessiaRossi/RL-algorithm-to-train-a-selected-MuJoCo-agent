@@ -176,3 +176,4 @@ cython_debug/
 /venv
 /logs
 /requirements.txt
+/results
