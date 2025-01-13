@@ -1,15 +1,18 @@
 import gymnasium as gym
 from gymnasium.wrappers import RecordVideo, TimeLimit, RecordEpisodeStatistics
 from stable_baselines3.common.vec_env import SubprocVecEnv, DummyVecEnv, VecNormalize
+from stable_baselines3.common.monitor import Monitor
 
 # Inizializzazione dell'environment
 def make_env(env_id="HalfCheetah-v5", max_episode_steps=1000, seed=0):
     def _init():
         env = gym.make(env_id)
+        # Registra statistiche per valutazioni accurate
+        env = Monitor(env)
         # Limitiamo la durata massima dell'episodio
         env = TimeLimit(env, max_episode_steps=max_episode_steps)
         # Registra statistiche (reward cumulativo, length, ecc.)
-        env = RecordEpisodeStatistics(env)
+        #env = RecordEpisodeStatistics(env)
         env.reset(seed=seed)
         return env
     return _init
@@ -69,6 +72,13 @@ def create_train_env(env_id, n_envs, max_episode_steps, seed, normalize=True, no
     return envs
 
 # Creazione di un ambiente di valutazione opzionalmente normalizzato
+#def create_eval_env(env_id, max_episode_steps, seed):
+#    def _init():
+#        env = make_env(env_id, max_episode_steps, seed+999)()
+#        return env
+#
+#    eval_env = DummyVecEnv([_init])
+#    return eval_env
 def create_eval_env(env_id, max_episode_steps, seed):
-    eval_env = make_env(env_id, max_episode_steps, seed+999)()
-    return eval_env
+    env = make_env(env_id, max_episode_steps, seed+999)()
+    return env
