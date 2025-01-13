@@ -1,6 +1,6 @@
 import os
-import gym
-from gym.wrappers import RecordVideo, TimeLimit, RecordEpisodeStatistics
+import gymnasium as gym
+from gymnasium.wrappers import RecordVideo, TimeLimit, RecordEpisodeStatistics
 
 # Registra il comportamento di un modello RL e salva i video degli episodi
 def record_agent_video(model, env_id, max_steps=1000, seed=9999, video_dir="results/videos/", video_prefix="agent", episodes=2):
