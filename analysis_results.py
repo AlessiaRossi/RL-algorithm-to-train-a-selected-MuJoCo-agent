@@ -13,7 +13,6 @@ def evaluate_model(model, env, n_eval_episodes=10, success_threshold=200):
     for _ in range(n_eval_episodes):
         reset_result = env.reset()
         obs = reset_result[0] if isinstance(reset_result, tuple) else reset_result
-        # = reset_result[1] if isinstance(reset_result, tuple) else {}
         done = False
         total_reward = 0
 
@@ -24,7 +23,6 @@ def evaluate_model(model, env, n_eval_episodes=10, success_threshold=200):
             reward = step_result[1]
             terminated = step_result[2]
             truncated = step_result[3] if len(step_result) > 3 else False
-            #info = step_result[4] if len(step_result) > 4 else {}
 
             done = np.any(terminated) or np.any(truncated) if isinstance(terminated, np.ndarray) else (terminated or truncated)
             total_reward += np.sum(reward) if isinstance(reward, np.ndarray) else reward
@@ -36,6 +34,9 @@ def evaluate_model(model, env, n_eval_episodes=10, success_threshold=200):
         "dev_std_reward": np.std(episodio_rewards),
         "varianza_reward": np.var(episodio_rewards),
         "somma_reward": np.sum(episodio_rewards),
+        "max_reward": np.max(episodio_rewards),
+        "min_reward": np.min(episodio_rewards),
+        "episodio_rewards": episodio_rewards,
     }
     return metriche
 
@@ -58,22 +59,82 @@ def evaluate_model_test(model, env, episodes=10, success_threshold=None):
 
 def save_metrics(metrics, filename):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
-    with open(filename, 'w') as f:
+    with open(filename, "w") as f:
         for key, value in metrics.items():
-            f.write(f"{key}: {value:.2f}\n")
+            if isinstance(value, (int, float)):  # Per numeri
+                f.write(f"{key}: {value:.2f}\n")
+            elif isinstance(value, list):  # Per liste (es. episodio_rewards)
+                f.write(f"{key}: {value}\n")
 
-'''def plot(ppo_metrics, sac_metrics, random_metrics, filename):
-    # Confronto delle metriche tra PPO e SAC e visualizzazione tramite grafici
+    print(f"Metriche salvate in: {filename}")
 
-    labels = ["Random","PPO", "SAC"]
-    rewards = [ppo_metrics.get("media_reward", 0), sac_metrics.get("media_reward", 0), random_metrics.get("media_reward", 0)]
 
-    # Grafico Ricompensa media
-    plt.figure(figsize=(8, 6))
-    plt.bar(labels, rewards, color=['blue', 'orange','green'], alpha=0.7)
-    plt.ylabel("Ricompensa Media")
-    plt.title("Confronto Ricompense Medie")
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
-    plt.savefig(filename)
-    plt.show()'''
 
+
+
+def plot_comparison(random_metrics, ppo_metrics, sac_metrics, output_path="results/plots/performance_comparison.png"):
+    """
+    Confronta le performance tra Random, PPO e SAC utilizzando le metriche fornite.
+    """
+    # Estrai le metriche principali
+    labels = ["Random Policy", "PPO", "SAC"]
+    mean_rewards = [
+        random_metrics.get("media_reward", 0),
+        ppo_metrics.get("media_reward", 0),
+        sac_metrics.get("media_reward", 0),
+    ]
+    std_devs = [
+        random_metrics.get("dev_std_reward", 0),
+        ppo_metrics.get("dev_std_reward", 0),
+        sac_metrics.get("dev_std_reward", 0),
+    ]
+    medians = [
+        random_metrics.get("mediana_reward", 0),
+        ppo_metrics.get("mediana_reward", 0),
+        sac_metrics.get("mediana_reward", 0),
+    ]
+    max_rewards = [
+        random_metrics.get("max_reward", 0),
+        ppo_metrics.get("max_reward", 0),
+        sac_metrics.get("max_reward", 0),
+    ]
+    min_rewards = [
+        random_metrics.get("min_reward", 0),
+        ppo_metrics.get("min_reward", 0),
+        sac_metrics.get("min_reward", 0),
+    ]
+
+    # Creazione del plot a barre
+    x = np.arange(len(labels))
+    plt.figure(figsize=(12, 8))
+    bars = plt.bar(x, mean_rewards, yerr=std_devs, capsize=10, alpha=0.8, color=["gray", "blue", "orange"], edgecolor="black")
+
+    # Aggiungi i valori sopra le barre
+    for bar, mean in zip(bars, mean_rewards):
+        plt.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 1, f"{mean:.2f}",
+                 ha='center', va='bottom', fontsize=10, color='black', weight='bold')
+
+    # Etichette e titoli
+    plt.xticks(x, labels, fontsize=12)
+    plt.ylabel("Reward Medio", fontsize=12)
+    plt.title("Confronto delle Performance: Random vs PPO vs SAC", fontsize=14)
+    plt.grid(axis="y", linestyle="--", alpha=0.7)
+    plt.ylim(min(0, min(mean_rewards) - max(std_devs) * 1.2), max(mean_rewards) + max(std_devs) * 1.2)
+
+    # Salvataggio e visualizzazione
+    plt.tight_layout()
+    plt.savefig(output_path)
+    plt.show()
+    print(f"Plot per il confronto delle performance salvato in: {output_path}")
+
+    # Creazione del box plot
+    plt.figure(figsize=(12, 8))
+    data = [random_metrics["episodio_rewards"], ppo_metrics["episodio_rewards"], sac_metrics["episodio_rewards"]]
+    plt.boxplot(data, labels=labels)
+    plt.ylabel("Reward", fontsize=12)
+    plt.title("Distribuzione dei Reward: Random vs PPO vs SAC", fontsize=14)
+    plt.grid(axis="y", linestyle="--", alpha=0.7)
+    plt.tight_layout()
+    plt.savefig("results/plots/reward_distribution.png")
+    plt.show()
+    print("Plot per il confronto dei reward salvato in: results/plots/reward_distribution.png")

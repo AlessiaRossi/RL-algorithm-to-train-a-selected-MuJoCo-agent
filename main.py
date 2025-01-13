@@ -16,6 +16,7 @@ from analysis_results import evaluate_model, save_metrics
 from functions.ppo import ppo_optuna_tuning, train_ppo
 from functions.sac import sac_optuna_tuning, train_sac
 from functions.utils import ensure_dir, load_config
+from analysis_results import plot_comparison
 
 def main():
     print("\nCaricamento del file di configurazione...")
@@ -62,6 +63,9 @@ def main():
         "dev_std_reward": np.std(random_rewards),
         "varianza_reward": np.var(random_rewards),
         "somma_reward": np.sum(random_rewards),
+        "max_reward": np.max(random_rewards),
+        "min_reward": np.min(random_rewards),
+        "episodio_rewards": random_rewards
     }
     save_metrics(random_metrics, "results/metrics/random_metrics.txt")
 
@@ -94,10 +98,12 @@ def main():
         # Valutazione dei modelli
         print("\nValutazione del modello PPO...")
         ppo_metrics = evaluate_model(ppo_model, eval_env_ppo, N_EPISODES)
+        save_metrics(ppo_metrics, "results/metrics/ppo_metrics.txt")
         print(f"PPO Media dei reward: {ppo_metrics['media_reward']}")
 
         print("\nValutazione del modello SAC...")
         sac_metrics = evaluate_model(sac_model, eval_env_sac, N_EPISODES)
+        save_metrics(sac_metrics, "results/metrics/ppo_metrics.txt")
         print(f"SAC Media dei reward: {sac_metrics['media_reward']}")
     else:
         # Tuning PPO con Optuna
@@ -156,9 +162,6 @@ def main():
         save_metrics(sac_metrics, "results/metrics/sac_metrics.txt")
         print(f"SAC Media dei reward: {sac_metrics['media_reward']}")
 
-    # print("\nGenerazione del grafico di confronto...")
-    # plot(random_metrics, ppo_metrics, sac_metrics, "results/plots/rewards_comparison.png")
-    # print("Grafico salvato in results/plots/rewards_comparison.png")
     
     # Registrazione dei video degli episodi
     print("\nRegistrazione dei video degli episodi...")
@@ -189,6 +192,13 @@ def main():
         episodes=N_EPISODES
     )
 
+    # Plot confronto delle performance
+    plot_comparison(
+        random_metrics,
+        ppo_metrics,
+        sac_metrics,
+        output_path="results/plots/performance_comparison.png"
+    )
     if not DEBUG:
         # Chiudiamo env
         ppo_train_env.close()
