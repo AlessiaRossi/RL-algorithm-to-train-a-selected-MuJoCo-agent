@@ -1,4 +1,4 @@
-media_reward: -0.03
-dev_std_reward: 0.00
+media_reward: -0.12
+dev_std_reward: 0.06
 varianza_reward: 0.00
-somma_reward: -0.30
+somma_reward: -0.62
