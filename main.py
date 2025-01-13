@@ -7,6 +7,7 @@ from stable_baselines3 import PPO, SAC
 from stable_baselines3.common.vec_env import SubprocVecEnv, DummyVecEnv, VecNormalize
 from functions.record import record_agent_video
 
+# Suppress specific warnings from libraries
 warnings.filterwarnings("ignore", category=UserWarning, module="gymnasium.wrappers.record_video")
 warnings.filterwarnings("ignore", category=UserWarning, module="stable_baselines3.common.on_policy_algorithm")
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
@@ -19,14 +20,14 @@ from functions.utils import ensure_dir, load_config
 from analysis_results import plot_comparison
 
 def main():
-    print("\nCaricamento del file di configurazione...")
-    # Caricamento della configurazione
+    # Load configuration file
+    print("Loading configuration file...")
     config = load_config()
 
-    # Debug mode
+    # Debug mode flag
     DEBUG = config["general"]["debug"]
 
-    # Parametri principali dal file di configurazione
+    # Environment parameters
     ENV_ID = config["environment"]["env_id"]
     MAX_EPISODE_STEPS = config["environment"]["max_episode_steps"]
     SEED = config["environment"]["seed"]
@@ -34,18 +35,18 @@ def main():
     N_EPISODES = config["evaluation"]["n_episodes"]
     N_ENVS = config["environment"]["n_envs"]
 
-    # Parametri specifici di PPO
+    # PPO specific parameters
     PPO_TIMESTEPS = config["ppo"]["timesteps"]
     PPO_TRAINING_STEPS = config["ppo"]["training_steps"]
     N_TRIALS_PPO = config["ppo"]["n_trials"]
 
-    # Parametri specifici di SAC
+    # SAC specific parameters
     SAC_TIMESTEPS = config["sac"]["timesteps"]
     SAC_TRAINING_STEPS = config["sac"]["training_steps"]
     N_TRIALS_SAC = config["sac"]["n_trials"]
 
-    # Creazione delle directory per risultati
-    print("Creazione delle directory per i risultati...")
+    # Create necessary directories for results
+    print("Creating result directories...")
     ensure_dir("results/normalization")
     ensure_dir("results/metrics")
     ensure_dir("results/videos")
@@ -54,7 +55,7 @@ def main():
     
     print("\n### Inizializzazione dell'ambiente ###")
     
-    # Esecuzione di una random policy
+    # Run Random Policy to get baseline metrics
     print("\nEseguendo la Random Policy...")
     env = make_env()()
     random_rewards = run_random_policy(env)
@@ -69,44 +70,47 @@ def main():
     }
     save_metrics(random_metrics, "results/metrics/random_metrics.txt")
 
-    print(f"Random Policy Rewards per episode: {random_rewards}")
-    print(f"Random Policy Media dei reward: {random_metrics['media_reward']}")
+    print(f"\nRandom Policy rewards: {random_rewards}")
+    print(f"\nRandom Policy Average Reward: {random_metrics['media_reward']}")
 
     if DEBUG:
+        # Debug mode: load pre-trained models
         debug_paths = config["general"]["debug_paths"]
-
-        print("\nModalità debug attivata: caricamento dei modelli salvati...")
+        print("\nDebug mode activated: Loading saved models...")
         ppo_model = PPO.load(debug_paths["ppo_model"])
         sac_model = SAC.load(debug_paths["sac_model"])
 
-        # Creazione dell'ambiente di valutazione con statistiche caricate
+        # Load evaluation environments with normalization statistics
         eval_env_ppo = DummyVecEnv([lambda: make_env(env_id=ENV_ID, max_episode_steps=MAX_EPISODE_STEPS, seed=SEED)()])
         eval_env_sac = DummyVecEnv([lambda: make_env(env_id=ENV_ID, max_episode_steps=MAX_EPISODE_STEPS, seed=SEED)()])
 
+        # Load PPO normalization statistics
         if os.path.exists(debug_paths["ppo_stats"]):
             eval_env_ppo = VecNormalize.load(debug_paths["ppo_stats"], eval_env_ppo)
             eval_env_ppo.training = False
             eval_env_ppo.norm_reward = False
-            print(f"Statistiche PPO caricate da: {debug_paths['ppo_stats']}")
+            print(f"PPO statistics loaded from: {debug_paths['ppo_stats']}")
 
+        # Load SAC normalization statistics
         if os.path.exists(debug_paths["sac_stats"]):
             eval_env_sac = VecNormalize.load(debug_paths["sac_stats"], eval_env_sac)
             eval_env_sac.training = False
             eval_env_sac.norm_reward = False
-            print(f"Statistiche SAC caricate da: {debug_paths['sac_stats']}")
+            print(f"SAC statistics loaded from: {debug_paths['sac_stats']}")
 
-        # Valutazione dei modelli
+        # Evaluate PPO model
         print("\nValutazione del modello PPO...")
         ppo_metrics = evaluate_model(ppo_model, eval_env_ppo, N_EPISODES)
         save_metrics(ppo_metrics, "results/metrics/ppo_metrics.txt")
-        print(f"PPO Media dei reward: {ppo_metrics['media_reward']}")
+        print(f"SAC statistics loaded from: {ppo_metrics['media_reward']}")
 
+        # Evaluate SAC model
         print("\nValutazione del modello SAC...")
         sac_metrics = evaluate_model(sac_model, eval_env_sac, N_EPISODES)
         save_metrics(sac_metrics, "results/metrics/ppo_metrics.txt")
         print(f"SAC Media dei reward: {sac_metrics['media_reward']}")
     else:
-        # Tuning PPO con Optuna
+        # Tuning PPO using Optuna for hyperparameter tuning
         print("\n[Optuna] Tuning PPO hyperparameters...")
         best_ppo_params = ppo_optuna_tuning(
             env_id=ENV_ID,
@@ -118,7 +122,7 @@ def main():
             seed=SEED,
         )
 
-        # Tuning SAC con Optuna
+        # Tuning SAC using Optuna for hyperparameter tuning
         print("\n[Optuna] Tuning SAC hyperparameters...")
         best_sac_params = sac_optuna_tuning(
             env_id=ENV_ID,
@@ -130,7 +134,7 @@ def main():
             seed=SEED,
         )
 
-        # Training dell'agente con algoritmo PPO
+        # Train PPO agent with the best hyperparameters and evaluate
         print("\nTraining PPO...")
         ppo_model, ppo_train_env, ppo_eval_env = train_ppo(
             env_id=ENV_ID,
@@ -144,9 +148,9 @@ def main():
         )
         ppo_metrics = evaluate_model(ppo_model, ppo_eval_env, N_EPISODES)
         save_metrics(ppo_metrics, "results/metrics/ppo_metrics.txt")
-        print(f"PPO Media dei reward: {ppo_metrics['media_reward']}")
+        print(f"\nPPO Average Reward: {ppo_metrics['media_reward']}")
 
-        # Training dell'agente con algoritmo SAC
+        # Train SAC agent with the best hyperparameters and evaluate
         print("\nTraining SAC...")
         sac_model, sac_train_env, sac_eval_env = train_sac(
             env_id=ENV_ID,
@@ -160,17 +164,17 @@ def main():
         )
         sac_metrics = evaluate_model(sac_model, sac_eval_env, N_EPISODES)
         save_metrics(sac_metrics, "results/metrics/sac_metrics.txt")
-        print(f"SAC Media dei reward: {sac_metrics['media_reward']}")
+        print(f"\nSAC Average Reward: {sac_metrics['media_reward']}")
 
     
-    # Registrazione dei video degli episodi
-    print("\nRegistrazione dei video degli episodi...")
+    # Record videos of the episodes
+    print("\nRecording videos of episodes...")
     video_time = time.strftime("%H-%M_%d-%m-%Y")
     video_ppo = f"results/videos/ppo/{video_time}"
     video_sac = f"results/videos/sac/{video_time}"
     
-    print(f"Registrazione video PPO: {video_ppo}")
-    OFFSET_SEED = 9999 # Seed diverso per i video, cosi da registrati situazioni diverse da quelle viste durante il training
+    print(f"\nRecording PPO videos: {video_ppo}")
+    OFFSET_SEED = 9999  # Offset seed for video recording to avoid overlapping with training
     record_agent_video(
         model=ppo_model,
         env_id=ENV_ID,
@@ -181,7 +185,7 @@ def main():
         episodes=N_EPISODES
     )
 
-    print(f"\nRegistrazione video SAC: {video_sac}")
+    print(f"\nRecording PPO videos: {video_sac}")
     record_agent_video(
         model=sac_model,
         env_id=ENV_ID,
@@ -192,7 +196,7 @@ def main():
         episodes=N_EPISODES
     )
 
-    # Plot confronto delle performance
+    # Plot comparison of performance
     plot_comparison(
         random_metrics,
         ppo_metrics,
@@ -200,7 +204,7 @@ def main():
         output_path="results/plots/performance_comparison.png"
     )
     if not DEBUG:
-        # Chiudiamo env
+        # Close environments after training
         ppo_train_env.close()
         ppo_eval_env.close()
         sac_train_env.close()
