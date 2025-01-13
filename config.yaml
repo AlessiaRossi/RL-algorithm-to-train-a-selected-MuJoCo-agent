@@ -21,3 +21,12 @@ sac:
   timesteps: 2000000            # Numero totale di timesteps per il training
   training_steps: 50000         # Numero di timesteps per ogni sessione di training
   n_trials: 20                  # Numero di tentativi per il tuning degli iperparametri con Optuna
+
+# Parametri generali
+general:
+  debug: false                  # Abilita la modalità di debug
+  debug_paths:
+    ppo_model: "results/logs/ppo/best_model.zip"
+    ppo_stats: "results/normalization/ppo_vecnormalize_stats.pkl"
+    sac_model: "results/logs/sac/best_model.zip"
+    sac_stats: "results/normalization/sac_vecnormalize_stats.pkl"

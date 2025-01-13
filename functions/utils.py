@@ -29,7 +29,17 @@ def create_default_config(config_path="config.yaml"):
             "training_steps": 50000,
             "n_trials": 20,
         },
+        "general": {
+            "debug": False,
+            "debug_paths": {
+                "ppo_model": "results/logs/ppo/best_model.zip",
+                "sac_model": "results/logs/sac/best_model.zip",
+                "ppo_stats": "results/normalization/ppo_vecnormalize_stats.pkl",
+                "sac_stats": "results/normalization/sac_vecnormalize_stats.pkl",
+            }
+        }
     }
+    
     with open(config_path, "w") as file:
         yaml.safe_dump(default_config, file)
     print(f"File di configurazione creato: {config_path}")
@@ -51,6 +61,7 @@ def validate_config(config):
         "evaluation": ["eval_freq", "n_episodes"],
         "ppo": ["timesteps", "training_steps", "n_trials"],
         "sac": ["timesteps", "training_steps", "n_trials"],
+        "general": ["debug", "debug_paths"],
     }
 
     for section, keys in required_keys.items():
