@@ -202,7 +202,7 @@ def main():
         random_metrics,
         ppo_metrics,
         sac_metrics,
-        output_path="results/plots"
+        output_dir="results/plots"
     )
     if not DEBUG:
         # Close environments after training

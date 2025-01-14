@@ -71,7 +71,7 @@ def save_metrics(metrics, filename):
     print(f"Metrics saved to: {filename}")
 
 # Compare the performance of Random, PPO, and SAC models using plots
-def plot_comparison(random_metrics, ppo_metrics, sac_metrics, output_path):
+def plot_comparison(random_metrics, ppo_metrics, sac_metrics, output_dir):
     """
     Plot a comparison of performance metrics between Random, PPO, and SAC policies.
     Args:
@@ -80,6 +80,9 @@ def plot_comparison(random_metrics, ppo_metrics, sac_metrics, output_path):
         sac_metrics: Metrics for the SAC policy.
         output_path: File path to save the generated plot.
     """
+    # Ensure the output directory exists
+    os.makedirs(output_dir, exist_ok=True)
+
     # Extract the relevant metrics for plotting
     labels = ["Random Policy", "PPO", "SAC"]
     mean_rewards = [
@@ -97,24 +100,18 @@ def plot_comparison(random_metrics, ppo_metrics, sac_metrics, output_path):
     x = np.arange(len(labels))
     plt.figure(figsize=(12, 8))
     bars = plt.bar(x, mean_rewards, yerr=std_devs, capsize=10, alpha=0.8, color=["gray", "blue", "orange"], edgecolor="black")
-
-    # Add text labels for each bar
     for bar, mean in zip(bars, mean_rewards):
         plt.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 1, f"{mean:.2f}",
                  ha='center', va='bottom', fontsize=10, color='black', weight='bold')
-
-    # Customize the plot
     plt.xticks(x, labels, fontsize=12)
     plt.ylabel("Average Reward", fontsize=12)
     plt.title("Performance Comparison: Random vs PPO vs SAC", fontsize=14)
     plt.grid(axis="y", linestyle="--", alpha=0.7)
     plt.ylim(min(0, min(mean_rewards) - max(std_devs) * 1.2), max(mean_rewards) + max(std_devs) * 1.2)
-
-    # Save the plot to a file
     plt.tight_layout()
-    plt.savefig(output_path)
+    plt.savefig(os.path.join(output_dir, "average_reward_comparison.png"))
     plt.show()
-    print(f"Performance comparison plot saved to: {output_path}")
+    print(f"Performance comparison plot saved to: {os.path.join(output_dir,'average_reward_comparison.png')}")
 
     # Create a box plot for reward distributions
     plt.figure(figsize=(12, 8))
@@ -124,6 +121,6 @@ def plot_comparison(random_metrics, ppo_metrics, sac_metrics, output_path):
     plt.title("Reward Distribution: Random vs PPO vs SAC", fontsize=14)
     plt.grid(axis="y", linestyle="--", alpha=0.7)
     plt.tight_layout()
-    plt.savefig("results/plots/reward_distribution.png")
+    plt.savefig(os.path.join(output_dir, "reward_distribution.png"))
     plt.show()
-    print("Reward distribution plot saved to: results/plots/reward_distribution.png")
+    print(f"Reward distribution plot saved to: {os.path.join(output_dir, 'reward_distribution.png')}")
