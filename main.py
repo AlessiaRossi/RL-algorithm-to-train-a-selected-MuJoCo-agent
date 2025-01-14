@@ -56,7 +56,7 @@ def main():
     print("\n### Inizializzazione dell'ambiente ###")
     
     # Run Random Policy to get baseline metrics
-    print("\nEseguendo la Random Policy...")
+    print("\nRunning a random policy...")
     env = make_env()()
     random_rewards = run_random_policy(env)
     random_metrics = {
@@ -201,7 +201,7 @@ def main():
         random_metrics,
         ppo_metrics,
         sac_metrics,
-        output_path="results/plots/performance_comparison.png"
+        output_dir="results/plots"
     )
     if not DEBUG:
         # Close environments after training
