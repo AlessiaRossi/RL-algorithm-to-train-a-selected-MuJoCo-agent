@@ -53,7 +53,7 @@ def main():
     ensure_dir("results/plots")
     ensure_dir("results/logs")
     
-    print("\n### Inizializzazione dell'ambiente ###")
+    print("\n### Inizialization ###")
     
     # Run Random Policy to get baseline metrics
     print("\nRunning a random policy...")
@@ -107,7 +107,7 @@ def main():
         # Evaluate SAC model
         print("\nValutazione del modello SAC...")
         sac_metrics = evaluate_model(sac_model, eval_env_sac, N_EPISODES)
-        save_metrics(sac_metrics, "results/metrics/ppo_metrics.txt")
+        save_metrics(sac_metrics, "results/metrics/sac_metrics.txt")
         print(f"SAC Media dei reward: {sac_metrics['media_reward']}")
     else:
         # Tuning PPO using Optuna for hyperparameter tuning
@@ -172,7 +172,7 @@ def main():
     video_time = time.strftime("%H-%M_%d-%m-%Y")
     video_ppo = f"results/videos/ppo/{video_time}"
     video_sac = f"results/videos/sac/{video_time}"
-    
+
     print(f"\nRecording PPO videos: {video_ppo}")
     OFFSET_SEED = 9999  # Offset seed for video recording to avoid overlapping with training
     record_agent_video(
@@ -185,7 +185,7 @@ def main():
         episodes=N_EPISODES
     )
 
-    print(f"\nRecording PPO videos: {video_sac}")
+    print(f"\nRecording SAC videos: {video_sac}")
     record_agent_video(
         model=sac_model,
         env_id=ENV_ID,
@@ -196,12 +196,13 @@ def main():
         episodes=N_EPISODES
     )
 
+
     # Plot comparison of performance
     plot_comparison(
         random_metrics,
         ppo_metrics,
         sac_metrics,
-        output_dir="results/plots"
+        output_path="results/plots"
     )
     if not DEBUG:
         # Close environments after training
