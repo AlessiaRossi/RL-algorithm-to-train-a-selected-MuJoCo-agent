@@ -99,16 +99,16 @@ def main():
             print(f"SAC statistics loaded from: {debug_paths['sac_stats']}")
 
         # Evaluate PPO model
-        print("\nValutazione del modello PPO...")
+        print("\nEvaluating PPO model...")
         ppo_metrics = evaluate_model(ppo_model, eval_env_ppo, N_EPISODES)
         save_metrics(ppo_metrics, "results/metrics/ppo_metrics.txt")
-        print(f"SAC statistics loaded from: {ppo_metrics['media_reward']}")
+        print(f"PPo statistics loaded from: {ppo_metrics['media_reward']}")
 
         # Evaluate SAC model
-        print("\nValutazione del modello SAC...")
+        print("\nEvaluating SAC model...")
         sac_metrics = evaluate_model(sac_model, eval_env_sac, N_EPISODES)
         save_metrics(sac_metrics, "results/metrics/sac_metrics.txt")
-        print(f"SAC Media dei reward: {sac_metrics['media_reward']}")
+        print(f"SAC statistics loaded from: {sac_metrics['media_reward']}")
     else:
         # Tuning PPO using Optuna for hyperparameter tuning
         print("\n[Optuna] Tuning PPO hyperparameters...")

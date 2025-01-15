@@ -3,10 +3,11 @@
 ## Index
 
 1. [Project Description](#1-project-description)
-   - [Project Structure](./myLib/Project_Structure.md)
+   - [Project Structure.md](Project%20Structure.md)
 2. [Environment setup](#2-environment-setup)
-3. [Pipeline](#4-pipeline)
-4. [Results & Graphs](#5-results--graphs)
+3. [Pipeline](#3-pipeline)
+4. [Results & Graphs](#4-results--graphs)
+   - [Results & Graphs.md](../results/Results%20%26%20Graphs.md)
 
 
 ## 1. Project Description
@@ -48,7 +49,7 @@ Before running the code, ensure you are using Python version 3.10.*. It's import
      This command downloads all the non-standard modules required by the application.
 5. If your Python version used to generate the virtual environment doesn't contain an updated version of pip, update pip using: `pip install --upgrade pip`
 
-Once you've set up your virtual environment and installed the dependencies, you're ready to run the application. Simply navigate to the [`main.py`](main.py) file and execute it.
+Once you've set up your virtual environment and installed the dependencies, you're ready to run the application. Simply navigate to the [`main.py`](../main.py) file and execute it.
 
 [Quickly return to the top](#rl-algorithm-to-train-a-selected-mujoco-agent)
 
@@ -60,13 +61,13 @@ The data processing and analysis pipeline includes the following steps:
 4. **Evaluation**: Evaluate the performance of the agent and perform hyperparameter tuning.
 5. **Analysis**: Analyze the results and performance metrics to determine the effectiveness of the training algorithms.
 
-You can find more details in the _Pipeline Description_ paragraph of the [Project Structure]( ) file.
+You can find more details in the _Pipeline Description_ paragraph of the [Project Structure.md](Project%20Structure.md) file.
 
 [Quickly return to the top](#rl-algorithm-to-train-a-selected-mujoco-agent)
 
 ## **4. Results & Graphs**
 The goal of the challenge is to train the HalfCheetah agent using PPO and SAC algorithms and evaluate their performance. This involves analyzing the agent's behavior and performance metrics to determine which algorithm is better suited for the problem. Additionally, an analysis of hyperparameters will be conducted to identify which settings yield the best results.
 
-For a detailed visualization of the results and graphs obtained, please refer to the [Results & Graphs]() file.
+For a detailed visualization of the results and graphs obtained, please refer to the [Results & Graphs.md](../results/Results%20%26%20Graphs.md) file.
 
 [Quickly return to the top](#rl-algorithm-to-train-a-selected-mujoco-agent)
