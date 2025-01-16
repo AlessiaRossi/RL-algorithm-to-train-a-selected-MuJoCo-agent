@@ -51,7 +51,21 @@ Before running the code, ensure you are using Python version 3.10.*. It's import
 
 Once you've set up your virtual environment and installed the dependencies, you're ready to run the application. Simply navigate to the [`main.py`](../main.py) file and execute it.
 
-[Quickly return to the top](#rl-algorithm-to-train-a-selected-mujoco-agent)
+### Debug Mode
+To avoid running the full training and hyperparameter tuning process every time, which is very long and computationally intensive, you can enable the debug mode. This mode allows you to quickly test and debug the code without performing the complete training.
+
+To enable debug mode, set the `debug` parameter to `true` in the `config.yaml` file. This will use pre-trained models and saved statistics for quick testing.
+
+```yaml
+general:
+  debug: true                  # Enable debug mode
+  debug_paths:
+    ppo_model: "results/logs/ppo/best_model.zip"
+    ppo_stats: "results/normalization/ppo_vecnormalize_stats.pkl"
+    sac_model: "results/logs/sac/best_model.zip"
+    sac_stats: "results/normalization/sac_vecnormalize_stats.pkl"
+```
+[Quickly return to the top](#rl-algorithm-to-train-a-selected-mujoco-agent) 
 
 ## **3. Pipeline**
 The data processing and analysis pipeline includes the following steps:

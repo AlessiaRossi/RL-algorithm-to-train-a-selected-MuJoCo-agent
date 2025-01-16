@@ -122,14 +122,14 @@ Hyperparameter tuning is a crucial step in training reinforcement learning algor
 The best hyperparameters depend on the specific environment and task. However, some general guidelines can be followed:
 
 - **PPO**:
-  - **Learning Rate**: \(3 \times 10^{-4}\)
+  - **Learning Rate**: 0.0003
   - **Batch Size**: 64
   - **Discount Factor**: 0.99
   - **Entropy Coefficient**: 0.01
   - **Clip Range**: 0.2
 
 - **SAC**:
-  - **Learning Rate**: \(3 \times 10^{-4}\)
+  - **Learning Rate**: 0.0003
   - **Batch Size**: 256
   - **Discount Factor**: 0.99
   - **Entropy Coefficient**: 0.2
