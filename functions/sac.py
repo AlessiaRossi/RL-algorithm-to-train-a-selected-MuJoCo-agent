@@ -31,11 +31,11 @@ def sac_optuna_tuning(env_id, max_episode_steps=1000, n_trials=10, training_step
             float: Negative mean reward (for minimization purposes).
         """
         # Sample hyperparameters for SAC
-        lr = trial.suggest_float("learning_rate", 1e-5, 3e-4, log=True)  # Learning rate
-        buff_size = trial.suggest_int("buffer_size", 500000, 2000000, step=100000)  # Replay buffer size
-        bs = trial.suggest_int("batch_size", 128, 512, step=64)  # Batch size
-        gam = trial.suggest_float("gamma", 0.95, 0.9999, log=True)  # Discount factor
-        tau_ = trial.suggest_float("tau", 0.01, 0.1, log=True)  # Soft update coefficient
+        lr = trial.suggest_float("learning_rate", 1e-5, 1e-2, log=True)
+        buff_size = trial.suggest_int("buffer_size", 500_000, 3_000_000, step=500_000)
+        bs = trial.suggest_int("batch_size", 128, 1024, step=64)
+        gam = trial.suggest_float("gamma", 0.90, 0.9999, log=True)
+        tau_ = trial.suggest_float("tau", 0.005, 0.1, log=True)
 
         # Entropy coefficient handling
         auto_entropy = trial.suggest_categorical("auto_entropy", [True, False])

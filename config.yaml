@@ -24,7 +24,7 @@ sac:
 
 # Parametri generali
 general:
-  debug: true                  # Abilita la modalità di debug
+  debug: false                  # Abilita la modalità di debug
   debug_paths:
     ppo_model: "results/logs/ppo/best_model.zip"
     ppo_stats: "results/normalization/ppo_vecnormalize_stats.pkl"
