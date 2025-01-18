@@ -8,7 +8,7 @@ from environments import create_train_env, create_eval_env
 from functions.progressCallback import ProgressCallback
 
 # Function for hyperparameter tuning of PPO using Optuna
-def ppo_optuna_tuning(env_id, max_episode_steps=1000, n_trials=30, training_steps=80000, eval_episodes=10, n_envs=8, seed=0):
+def ppo_optuna_tuning(env_id, max_episode_steps=1000, n_trials=30, training_steps=80000, eval_episodes=10, n_envs=4, seed=0):
     """
     Performs hyperparameter tuning for PPO using Optuna.
     Args:
@@ -32,11 +32,12 @@ def ppo_optuna_tuning(env_id, max_episode_steps=1000, n_trials=30, training_step
         """
         # Define hyperparameters to tune
         lr = trial.suggest_float("learning_rate", 1e-5, 1e-2, log=True)
-        steps = trial.suggest_int("n_steps", 1000, 8000, step=1024)
+        steps = 5096
         gam = trial.suggest_float("gamma", 0.90, 0.9999, log=True)
         lam = trial.suggest_float("gae_lambda", 0.8, 1.0)
         clipr = trial.suggest_float("clip_range", 0.1, 0.4)
         ent_coef = trial.suggest_float("ent_coef", 0.0, 0.01)
+        batch_size = 256
 
         # Create training and evaluation environments
         train_env = create_train_env(env_id, n_envs, max_episode_steps, seed, normalize=True)
@@ -54,6 +55,7 @@ def ppo_optuna_tuning(env_id, max_episode_steps=1000, n_trials=30, training_step
             gae_lambda=lam,
             clip_range=clipr,
             ent_coef=ent_coef,
+            batch_size=batch_size,
             policy_kwargs={"net_arch": [512, 256, 128]},  # Neural network architecture
         )
 
