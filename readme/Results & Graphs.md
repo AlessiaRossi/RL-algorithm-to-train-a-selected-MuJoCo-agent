@@ -10,12 +10,12 @@ This document presents the results and graphs for the different algorithms used 
 2. [Graphs](#graphs)
    - [Reward Comparison](#reward-comparison)
    - [Episode Rewards](#episode-rewards)
+   - [Episode Rewards Over Time](#episode-rewards-over-time)
 3. [Analysis](#analysis)
 4. [Hyperparameter Tuning](#hyperparameter-tuning)
    - [Key Hyperparameters and Their Effects](#key-hyperparameters-and-their-effects)
    - [Best Hyperparameters and Their Effects](#best-hyperparameters-and-their-effects)
    - [Impact on Training](#impact-on-training)
-
 
 ### Metrics
 
@@ -33,7 +33,7 @@ This document presents the results and graphs for the different algorithms used 
   - -0.4856639802455902
   - -0.7305576801300049
 
-The PPO algorithm shows a relatively stable performance with a media reward of -0.6279713451862335. The standard deviation is low, indicating consistent performance across episodes. The maximum reward achieved is -0.4856639802455902, while the minimum is -0.7305576801300049. 
+The PPO algorithm shows a relatively stable performance with a media reward of -0.6279713451862335. The standard deviation is low, indicating consistent performance across episodes. The maximum reward achieved is -0.4856639802455902, while the minimum is -0.7305576801300049.
 
 #### SAC (Soft Actor-Critic)
 - **Media Reward**: -0.6451178669929505
@@ -49,7 +49,7 @@ The PPO algorithm shows a relatively stable performance with a media reward of -
   - -0.6068214774131775
   - -0.7202375531196594
 
-he SAC algorithm has a media reward of -0.6451178669929505, slightly lower than PPO. The standard deviation is also lower, indicating more consistent performance. The maximum reward achieved is -0.5544687509536743, and the minimum is -0.7202375531196594.
+The SAC algorithm has a media reward of -0.6451178669929505, slightly lower than PPO. The standard deviation is also lower, indicating more consistent performance. The maximum reward achieved is -0.5544687509536743, and the minimum is -0.7202375531196594.
 
 #### Random
 - **Media Reward**: -227.81577814548638
@@ -81,6 +81,20 @@ The graph above shows the comparison of rewards between the PPO, SAC, and random
 
 The episode rewards graph illustrates the rewards obtained in each episode for the PPO, SAC, and random policies. PPO and SAC show consistent performance across episodes, while the random policy has high variability.
 
+#### Episode Rewards Over Time
+
+##### PPO Episode Rewards Over Time
+
+![episode_rewards_ppo.png](../results/plots/episode_rewards_ppo.png) 
+
+The graph above shows the rewards for each episode using the PPO algorithm, highlighting the improvements over time.
+
+##### SAC Episode Rewards Over Time
+
+![episode_rewards_sac.png](../results/plots/episode_rewards_sac.png)sac_episode_rewards.png](../results/plots/sac_episode_rewards.png)
+
+The graph above shows the rewards for each episode using the SAC algorithm, highlighting the improvements over time.
+
 ### Analysis
 
 - **PPO**: The PPO algorithm demonstrates stable and consistent performance with low variability in rewards. It achieves the highest maximum reward among the three algorithms.
@@ -93,7 +107,7 @@ Hyperparameter tuning is a crucial step in training reinforcement learning algor
 
 ### Key Hyperparameters and Their Effects
 
-1. **Learning Rate**: 
+1. **Learning Rate**:
    - **Description**: Controls the step size during the optimization process.
    - **Effect**: A high learning rate can lead to faster convergence but may cause instability. A low learning rate ensures stable learning but may slow down the convergence.
 

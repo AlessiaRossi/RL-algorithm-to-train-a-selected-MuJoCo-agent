@@ -126,25 +126,31 @@ def plot_comparison(random_metrics, ppo_metrics, sac_metrics, output_dir):
     print(f"Reward distribution plot saved to: {os.path.join(output_dir, 'reward_distribution.png')}")
 
 # Plot the rewards for each episode
-def plot_episode_rewards(metrics, output_dir, title="Episode Rewards Over Time"):
+def plot_episode_rewards(metrics, output_dir, model_name, title="Episode Rewards Over Time"):
     """
     Plot the rewards for each episode to show improvements over time.
     Args:
         metrics: Dictionary containing evaluation metrics.
         output_dir: Directory to save the plot.
+        model_name: Name of the model (e.g., 'PPO' or 'SAC').
         title: Title of the plot.
     """
     os.makedirs(output_dir, exist_ok=True)
     episodio_rewards = metrics["episodio_rewards"]
+
     plt.figure(figsize=(12, 8))
     plt.plot(range(len(episodio_rewards)), episodio_rewards, marker='o', linestyle='-', color='b')
     plt.xlabel("Episode", fontsize=12)
     plt.ylabel("Reward", fontsize=12)
-    plt.title(title, fontsize=14)
+    plt.title(f"{title} - {model_name}", fontsize=14)
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "episode_rewards.png"))
+
+    # Save the plot with the model name included
+    plot_filename = os.path.join(output_dir, f"episode_rewards_{model_name.lower()}.png")
+    plt.savefig(plot_filename)
     plt.show()
-    print(f"Episode rewards plot saved to: {os.path.join(output_dir, 'episode_rewards.png')}")
+
+    print(f"Episode rewards plot saved to: {plot_filename}")
 
 

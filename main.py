@@ -166,8 +166,8 @@ def main():
         print(f"\nSAC Average Reward: {sac_metrics['media_reward']}")
 
     # Plot episode rewards for PPO and SAC
-    plot_episode_rewards(ppo_metrics, "results/plots", title="PPO Episode Rewards Over Time")
-    plot_episode_rewards(sac_metrics, "results/plots", title="SAC Episode Rewards Over Time")
+    plot_episode_rewards(ppo_metrics, "results/plots", "PPO", title="PPO Episode Rewards Over Time")
+    plot_episode_rewards(sac_metrics, "results/plots", "SAC", title="SAC Episode Rewards Over Time")
 
     # Record videos of the episodes
     print("\nRecording videos of episodes...")
