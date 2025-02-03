@@ -124,3 +124,27 @@ def plot_comparison(random_metrics, ppo_metrics, sac_metrics, output_dir):
     plt.savefig(os.path.join(output_dir, "reward_distribution.png"))
     plt.show()
     print(f"Reward distribution plot saved to: {os.path.join(output_dir, 'reward_distribution.png')}")
+
+# Plot the rewards for each episode
+def plot_episode_rewards(metrics, output_dir, title="Episode Rewards Over Time"):
+    """
+    Plot the rewards for each episode to show improvements over time.
+    Args:
+        metrics: Dictionary containing evaluation metrics.
+        output_dir: Directory to save the plot.
+        title: Title of the plot.
+    """
+    os.makedirs(output_dir, exist_ok=True)
+    episodio_rewards = metrics["episodio_rewards"]
+    plt.figure(figsize=(12, 8))
+    plt.plot(range(len(episodio_rewards)), episodio_rewards, marker='o', linestyle='-', color='b')
+    plt.xlabel("Episode", fontsize=12)
+    plt.ylabel("Reward", fontsize=12)
+    plt.title(title, fontsize=14)
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, "episode_rewards.png"))
+    plt.show()
+    print(f"Episode rewards plot saved to: {os.path.join(output_dir, 'episode_rewards.png')}")
+
+

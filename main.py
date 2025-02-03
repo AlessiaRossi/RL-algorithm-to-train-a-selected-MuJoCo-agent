@@ -13,11 +13,10 @@ warnings.filterwarnings("ignore", category=UserWarning, module="stable_baselines
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 
 from environments import make_env, run_random_policy
-from analysis_results import evaluate_model, save_metrics
+from analysis_results import evaluate_model, save_metrics, plot_comparison, plot_episode_rewards
 from functions.ppo import ppo_optuna_tuning, train_ppo
 from functions.sac import sac_optuna_tuning, train_sac
 from functions.utils import ensure_dir, load_config
-from analysis_results import plot_comparison
 
 def main():
     # Load configuration file
@@ -52,9 +51,9 @@ def main():
     ensure_dir("results/videos")
     ensure_dir("results/plots")
     ensure_dir("results/logs")
-    
+
     print("\n### Inizialization ###")
-    
+
     # Run Random Policy to get baseline metrics
     print("\nRunning a random policy...")
     env = make_env()()
@@ -166,7 +165,10 @@ def main():
         save_metrics(sac_metrics, "results/metrics/sac_metrics.txt")
         print(f"\nSAC Average Reward: {sac_metrics['media_reward']}")
 
-    
+    # Plot episode rewards for PPO and SAC
+    plot_episode_rewards(ppo_metrics, "results/plots", title="PPO Episode Rewards Over Time")
+    plot_episode_rewards(sac_metrics, "results/plots", title="SAC Episode Rewards Over Time")
+
     # Record videos of the episodes
     print("\nRecording videos of episodes...")
     video_time = time.strftime("%H-%M_%d-%m-%Y")
@@ -179,7 +181,7 @@ def main():
         model=ppo_model,
         env_id=ENV_ID,
         max_steps=MAX_EPISODE_STEPS,
-        seed=SEED + OFFSET_SEED, 
+        seed=SEED + OFFSET_SEED,
         video_dir=video_ppo,
         video_prefix="ppo_agent",
         episodes=N_EPISODES
@@ -195,7 +197,6 @@ def main():
         video_prefix="sac_agent",
         episodes=N_EPISODES
     )
-
 
     # Plot comparison of performance
     plot_comparison(
