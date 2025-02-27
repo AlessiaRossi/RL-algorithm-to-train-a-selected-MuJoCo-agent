@@ -3,7 +3,7 @@
 ## Index
 
 1. [Project Description](#1-project-description)
-   - [Project Structure.md](Project%20Structure.md)
+   - [Project Structure.md](readme/Project Structure.md)
 2. [Environment setup](#2-environment-setup)
 3. [Pipeline](#3-pipeline)
 4. [Results & Graphs](#4-results--graphs)
@@ -49,7 +49,7 @@ Before running the code, ensure you are using Python version 3.10.*. It's import
      This command downloads all the non-standard modules required by the application.
 5. If your Python version used to generate the virtual environment doesn't contain an updated version of pip, update pip using: `pip install --upgrade pip`
 
-Once you've set up your virtual environment and installed the dependencies, you're ready to run the application. Simply navigate to the [`main.py`](../main.py) file and execute it.
+Once you've set up your virtual environment and installed the dependencies, you're ready to run the application. Simply navigate to the [`main.py`](main.py) file and execute it.
 
 ### Debug Mode
 To avoid running the full training and hyperparameter tuning process every time, which is very long and computationally intensive, you can enable the debug mode. This mode allows you to quickly test and debug the code without performing the complete training.
@@ -75,7 +75,7 @@ The data processing and analysis pipeline includes the following steps:
 4. **Evaluation**: Evaluate the performance of the agent and perform hyperparameter tuning.
 5. **Analysis**: Analyze the results and performance metrics to determine the effectiveness of the training algorithms.
 
-You can find more details in the _Pipeline Description_ paragraph of the [Project Structure.md](Project%20Structure.md) file.
+You can find more details in the _Pipeline Description_ paragraph of the [Project Structure.md](readme/Project Structure.md) file.
 
 [Quickly return to the top](#rl-algorithm-to-train-a-selected-mujoco-agent)
 
